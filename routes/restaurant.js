@@ -8,14 +8,25 @@ const router = express.Router()
 
 router.post('/signup', async (req, res) => {
 
-    console.log(req.body)
-    let restaurant = await Restaurant.create(req.body)
+    try{
 
-    return res.status(200).json({
-        data: restaurant,
-        userType: 'restaurant',
-        message: "Restaurant successfully added!"
-    })
+        console.log(req.body)
+        let restaurant = await Restaurant.create(req.body)
+
+        return res.status(200).json({
+            data: restaurant,
+            userType: 'restaurant',
+            message: "Restaurant successfully added!"
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            data: [],
+            message: "Error Occured!"
+        })
+    }
+    
 
 })
 
