@@ -5,7 +5,7 @@ var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = 'secret';
+opts.secretOrKey = 'my_key';
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     Customer.findOne({id: jwt_payload.id}, function(err, user) {
@@ -16,7 +16,8 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
             return done(null, user);
         } else {
 
-            Restaurant.findOne({id: jwt_payload.id}, function(err, user) {
+            console.log('the id', jwt_payload.id)
+            Restaurant.findById(jwt_payload.id, function(err, user) {
 
                 if (err) {
                     return done(err, false);
@@ -34,14 +35,6 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
 }));
 
 
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
-  });
-  
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function (err, user) {
-      done(err, user);
-    });
-  });
+
 
 module.exports = passport
